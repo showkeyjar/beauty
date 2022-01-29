@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="cn">
+<head>
+    <meta charset="UTF-8">
+    <title>Beauty Server</title>
+    <script src="/static/js/jquery-3.4.1.min.js"></script>
+</head>
+<body>
+<div>
+    <h1>美颜计划</h1>
+    {% if score %}
+    <table width="100%"><tr>
+        <td width="50%">
+            <img src="/{{img}}" width="186" height="186" id="image_avatar"/>
+        </td>
+        <td>
+    <p>颜值得分：{{score}}</p>
+    <form action="/gen" method="post" target="_self">
+        <input type="hidden" name="im_path" value="{{img}}">
+        选择报告类型：<select name="type">
+            <option value="default">default</option>
+            <option value="shap">shap</option>
+            <option value="interpret">interpret</option>
+            <option value="lime">lime</option>
+        </select>
+        <br/>
+        <button type="submit" id="gen_report">生成报告</button>
+        <br/>
+        <span>注意：颜值评测报告生成时间比较久，约1-2分钟，请耐心等待</span>
+    </form>
+        </td>
+    </tr></table>
+    {% else %}
+    <table width="100%"><tr>
+        <td width="50%">
+            <div id="image_view">
+            </div>
+        </td>
+        <td>
+    <form action="/pred" method="post" enctype="multipart/form-data" target="_self">
+        <p>头像上传(仅支持jpg)</p>
+        <p>
+            <input type="file" class="file" name="sc" id="sc" accept=".jpg">
+        </p>
+        <p>
+            <button type="submit" id="pred_score">颜值打分</button>
+        </p>
+    </form>
+        </td>
+        </tr></table>
+    {% endif %}
+</div>
+<script>
+    $(function() {
+        $("#sc").change(function(e) {
+            var imgBox = e.target;
+            viewImg($('#image_view'), imgBox)
+        });
+        function viewImg(element, tag) {
+            var file = tag.files[0];
+            var imgSrc;
+            if (!/image\/\w+/.test(file.type)) {
+                alert("看清楚，这个需要图片！");
+                return false;
+            }
+            var reader = new FileReader();
+            reader.readAsDataURL(file);
+            reader.onload = function() {
+                console.log(this.result);
+                imgSrc = this.result;
+                var imgs = document.createElement("img");
+                $(imgs).attr("src", imgSrc);
+                $(imgs).attr("width", 350);
+                $(imgs).attr("height", 350);
+                element.append(imgs);
+            };
+        }
+    })
+</script>
+</body>
+</html>

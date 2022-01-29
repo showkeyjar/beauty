@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+    <head>
+        <meta charset="utf-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
+        <meta name="description" content="颜值,颜值评测,颜值排行,颜值对比,亚洲女性颜值" />
+        <meta name="author" content="zergskj@163.com" />
+        <title>颜值排行</title>
+        <link rel="icon" type="image/x-icon" href="assets/favicon.ico" />
+        <!-- Core theme CSS (includes Bootstrap)-->
+        <link rel="stylesheet" href="css/styles.css" />
+        <link rel="stylesheet" href="css/bootstrap-responsive-tabs.css">
+    </head>
+    <body id="page-top">
+        <!-- Navigation-->
+        <nav class="navbar navbar-expand-lg navbar-dark bg-dark fixed-top" id="mainNav">
+            <div class="container px-4">
+                <div class="navbar-header dropdown show">
+                    <a class="navbar-brand btn btn-secondary dropdown-toggle" href="/index.html#page-top" role="button" id="dropdownMenuLink" data-bs-toggle="dropdown" aria-expanded="false">颜值排行 {{pose_range[pose]}}</a>
+                    <div class="dropdown-menu" aria-labelledby="dropdownMenuLink">
+                        {% for k, v in pose_range.items() %}
+                        {% if loop.first %}
+                            <a class="dropdown-item" href="/index.html">{{v}}</a>
+                        {% else %}
+                            <a class="dropdown-item" href="/face_{{k}}.html">{{v}}</a>
+                        {% endif %}
+                        {% endfor %}
+                    </div>
+                </div>
+                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarResponsive" aria-controls="navbarResponsive" aria-expanded="false" aria-label="Toggle navigation"><span class="navbar-toggler-icon"></span></button>
+                <div class="collapse navbar-collapse" id="navbarResponsive">
+                    <ul class="navbar-nav ms-auto">
+                        {% for menu in menus %}
+                        <li class="nav-item"><a class="nav-link" href="#{{menu}}">{{class_name[menu.split('_')[0]]}}</a></li>
+                        {% endfor %}
+                    </ul>
+                </div>
+            </div>
+        </nav>
+        <!-- Header-->
+        <header class="bg-primary bg-gradient text-white">
+            <div class="container px-4 text-center">
+                <h1 class="fw-bolder">东南亚女性颜值排行榜</h1>
+                <p class="lead">申明：以下人脸均来自互联网已发表数据，模型自动推断评分，<a href="https://gitee.com/knifecms/beauty/wikis/%E9%A2%9C%E5%80%BC%E8%AF%84%E6%B5%8B%E6%A0%87%E5%87%86" target="_blank">推断规则</a><br/>
+                    若有侵权，请<a href="mailto:zergskj@163.com" target="_blank">联系我</a>下线 [更新于{{update_time}}]</p>
+            </div>
+        </header>
+        {% for k, v in class_data.items() %}
+        <!-- {{k}} section-->
+        <section id="{{k}}" class="bg-light">
+            <div class="container px-4">
+                <div class="row gx-4 justify-content-center">
+                    <div class="col-lg-8">
+                        <h2 class="mark">{{class_name[k.split("_")[0]]}} 表情 Top10</h2>
+                        <nav class="nav nav-pills nav-fill" id="{{k}}Tab" role="tablist">
+                            {% for k1 in v.keys() %}
+                            <button class="nav-link{% if loop.first %} active{% endif %}" id="tab_{{k}}{{k1}}"
+                            data-bs-target="#{{k}}{{k1}}" type="button" role="tab" aria-controls="{{k}}{{k1}}" aria-selected="{% if loop.first %}true{% else %}false{% endif %}">{{age_range[k1]}} 岁</button>
+                            {% endfor %}
+                        </nav>
+                        <div class="tab-content" id="{{k}}TabContent">
+                            {% for k1, v1 in v.items() %}
+                            <div class="tab-pane fade{% if loop.first %} show active{% endif %}" id="{{k}}{{k1}}" role="tabpanel" aria-labelledby="{{k}}{{k1}}-tab">
+                        <ol class="rank-list">
+                            {% for k2, se in v1.iterrows() %}
+                            <li class="user {{se['rank_class']}} zoom">
+                                <div class="rank">
+                                    {{se['rank_display']}}
+                                </div>
+                                <div class="profile">
+                                    <img src="{{se['img_path']}}" width="72" alt="{{se['score']}}" class="img-thumbnail" />
+                                </div>
+                                <div class="username">
+                                    {{se['name']}}
+                                </div>
+                                <div class="points">
+                                    {{se['score']}} pts
+                                </div>
+                                <div class="feedback">
+                                    <a href="/detail/{{se['img_id']}}.html"><img src="assets/feedback.png" class='medal' alt="详情" /></a>
+                                </div>
+                            </li>
+                            {% else %}
+                            <li class="user">
+                                <div class="rank"></div>
+                                <div class="profile"></div>
+                                <div class="username">暂缺</div>
+                            </li>
+                            {% endfor %}
+                        </ol>
+                            </div>
+                            {% endfor %}
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+        {% endfor %}
+        <!-- Footer-->
+        <footer class="py-5 bg-dark">
+            <div class="container px-4"><p class="m-0 text-center text-white">Copyright &copy; 1mei.fit 2021 <a href="https://beian.miit.gov.cn/" target="_blank">京ICP备2021035264号</a></p></div>
+        </footer>
+        <!-- Bootstrap core JS-->
+        <script src="js/bootstrap.bundle.min.js"></script>
+        <!-- Core theme JS-->
+        <script src="js/scripts.js"></script>
+    </body>
+</html>

@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>美丽计划</title>
+</head>
+<body>
+<h1>颜值PK</h1>
+<div>
+    <h2>选择一个你要pk的美女</h2>
+    <table width="100%"><tr>
+        <td width="50%">
+            <div id="beauty">
+                <ol>
+                    <li></li>
+                    <li></li>
+                    <li></li>
+                </ol>
+            </div>
+
+        </td>
+        <td>
+    <form action="/pred" method="post" enctype="multipart/form-data" target="_self">
+        <p>上传(仅支持jpg)</p>
+        <p>
+            <input type="file" class="file" name="sc" id="sc" accept=".jpg">
+        </p>
+        <p>
+            <button type="submit" id="pred_score">颜值pk</button>
+        </p>
+    </form>
+        </td>
+        </tr></table>
+</div>
+</body>
+</html>

@@ -1,0 +1,13 @@
+dependencyResolutionManagement {
+    repositoriesMode.set(RepositoriesMode.FAIL_ON_PROJECT_REPOS)
+    repositories {
+        google()
+        mavenCentral()
+        jcenter() // Warning: this repository is going to shut down soon
+        // 参考: https://github.com/Yalantis/uCrop/issues/779
+        maven { url "https://www.jitpack.io" }
+        maven { url 'https://repo1.maven.org/maven2/' }
+    }
+}
+rootProject.name = "Beauty Detection"
+include ':app'

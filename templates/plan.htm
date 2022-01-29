@@ -1,0 +1,15 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>美丽计划</title>
+</head>
+<body>
+<h1>改进方案</h1>
+<div>
+    {% for r in reports %}
+    <h2><a href="/view?id={{ r }}">{{ r }}</a></h2>
+    {% endfor %}
+</div>
+</body>
+</html>

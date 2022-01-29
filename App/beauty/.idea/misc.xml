@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="DesignSurface">
+    <option name="filePathToZoomLevelMap">
+      <map>
+        <entry key="..\:/python/beauty/App/beauty/app/src/main/res/layout/beauty_report.xml" value="0.1421875" />
+        <entry key="..\:/python/beauty/App/beauty/app/src/main/res/layout/fragment_dashboard.xml" value="0.15625" />
+        <entry key="..\:/python/beauty/App/beauty/app/src/main/res/layout/fragment_home.xml" value="0.4" />
+        <entry key="..\:/skj/beauty/App/Beauty/app/src/main/res/layout/activity_main.xml" value="0.33" />
+        <entry key="..\:/skj/beauty/App/Beauty/app/src/main/res/layout/fragment_dashboard.xml" value="0.1" />
+        <entry key="..\:/skj/beauty/App/Beauty/app/src/main/res/layout/fragment_home.xml" value="0.1" />
+        <entry key="..\:/skj/beauty/App/Beauty/app/src/main/res/layout/fragment_notifications.xml" value="0.20364583333333333" />
+        <entry key="..\:/skj/beauty/App/Beauty/app/src/main/res/layout/fragment_top.xml" value="0.20364583333333333" />
+        <entry key="..\:/skj/beauty/App/Beauty/app/src/main/res/menu/bottom_nav_menu.xml" value="0.20364583333333333" />
+        <entry key="..\:/skj/beauty/App/beauty/app/src/main/res/layout/activity_main.xml" value="0.20364583333333333" />
+        <entry key="..\:/skj/beauty/App/beauty/app/src/main/res/layout/beauty_report.xml" value="0.20364583333333333" />
+        <entry key="..\:/skj/beauty/App/beauty/app/src/main/res/layout/fragment_home.xml" value="0.20364583333333333" />
+        <entry key="..\:/skj/beauty/App/beauty/app/src/main/res/layout/fragment_notifications.xml" value="0.20364583333333333" />
+        <entry key="..\:/skj/beauty/App/beauty/app/src/main/res/layout/fragment_top.xml" value="0.1" />
+        <entry key="..\:/skj/beauty/App/beauty/app/src/main/res/layout/gen_report.xml" value="0.20364583333333333" />
+      </map>
+    </option>
+  </component>
+  <component name="ExternalStorageConfigurationManager" enabled="true" />
+  <component name="ProjectRootManager" version="2" languageLevel="JDK_11" default="true" project-jdk-name="11" project-jdk-type="JavaSDK">
+    <output url="file://$PROJECT_DIR$/build/classes" />
+  </component>
+  <component name="ProjectType">
+    <option name="id" value="Android" />
+  </component>
+  <component name="VisualizationToolProject">
+    <option name="state">
+      <ProjectState>
+        <option name="scale" value="0.15625" />
+      </ProjectState>
+    </option>
+  </component>
+</project>

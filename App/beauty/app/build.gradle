@@ -1,0 +1,126 @@
+plugins {
+    id 'com.android.application'
+    id 'kotlin-android'
+    id 'com.chaquo.python'
+    id 'kotlin-kapt'
+}
+
+android {
+    compileSdk 30
+
+    defaultConfig {
+        applicationId "com.ml.projects.beautydetection"
+        minSdk 21
+        targetSdk 30
+        versionCode 1
+        versionName "1.0"
+
+        testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
+        // testInstrumentationRunner 'androidx.test.ext.junit.runners.AndroidJUnit4'
+
+        ndk {
+            // abiFilters "armeabi-v7a", "arm64-v8a", "x86", "x86_64"  //full
+            // abiFilters "x86"  //debug
+            // abiFilters "armeabi-v7a", "arm64-v8a" //release
+            abiFilters "armeabi-v7a" //run
+        }
+
+        python {
+            buildPython "D:/tools/anaconda3/envs/beauty/python.exe"
+            pip {
+                install "tf-explain"
+                install "opencv-python"
+                install "tensorflow"
+                install "dlib"
+                install "scikit-learn"
+                install "pillow"
+                install "joblib"
+            }
+        }
+    }
+
+    sourceSets {
+        main{
+            // Android code dir
+            setRoot "src/main"
+            // Python code dir
+            python.srcDirs = ["src/main/assets/python"]
+        }
+    }
+
+    buildTypes {
+        release {
+            minifyEnabled false
+            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+        }
+    }
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_11
+        targetCompatibility JavaVersion.VERSION_11
+    }
+    kotlinOptions {
+        jvmTarget = '11'
+    }
+    androidResources {
+        noCompress 'tflite'
+    }
+    buildFeatures {
+        viewBinding true
+    }
+}
+
+dependencies {
+
+    implementation 'androidx.core:core-ktx:1.3.2'
+    implementation 'androidx.appcompat:appcompat:1.2.0'
+    implementation 'com.google.android.material:material:1.3.0'
+    implementation 'androidx.constraintlayout:constraintlayout:2.0.4'
+    implementation 'androidx.lifecycle:lifecycle-livedata-ktx:2.3.1'
+    implementation 'androidx.lifecycle:lifecycle-viewmodel-ktx:2.3.1'
+    implementation 'androidx.navigation:navigation-fragment-ktx:2.3.5'
+    implementation 'androidx.navigation:navigation-ui-ktx:2.3.5'
+    implementation 'androidx.legacy:legacy-support-v4:1.0.0'
+
+    implementation 'com.google.mlkit:face-detection:16.1.2'
+    implementation 'com.google.android.gms:play-services-mlkit-face-detection:16.2.0'
+    implementation 'org.jetbrains.kotlinx:kotlinx-coroutines-core:1.3.8'
+    implementation 'org.jetbrains.kotlinx:kotlinx-coroutines-android:1.3.3'
+    implementation "androidx.exifinterface:exifinterface:1.3.2"
+    implementation 'org.tensorflow:tensorflow-lite:2.4.0'
+    implementation 'org.tensorflow:tensorflow-lite-gpu:2.4.0'
+    implementation 'org.tensorflow:tensorflow-lite-support:0.1.0'
+
+    def room_version = "2.3.0"
+    implementation "androidx.room:room-runtime:$room_version"
+    annotationProcessor "androidx.room:room-compiler:$room_version"
+    // optional - Test helpers
+    testImplementation "androidx.room:room-testing:$room_version"
+    kapt "androidx.room:room-compiler:$room_version"
+
+    implementation "androidx.swiperefreshlayout:swiperefreshlayout:1.1.0"
+    implementation "de.codecrafters.tableview:tableview:2.8.0"
+
+    implementation 'com.github.PhilJay:MPAndroidChart:v3.1.0'
+
+    implementation fileTree(include:['*.jar'], dir:'libs')
+    implementation  'com.umeng.umsdk:common:9.4.2'// 必选
+    implementation  'com.umeng.umsdk:asms:1.4.0'// 必选
+
+    // test
+    testImplementation "androidx.arch.core:core-testing:2.1.0"
+    testImplementation "androidx.room:room-testing:2.2.6"
+    testImplementation "junit:junit:4.13.2"
+    testImplementation "com.google.truth:truth:1.1.2"
+    testImplementation "org.jetbrains.kotlinx:kotlinx-coroutines-test:1.3.4"
+    testImplementation "org.robolectric:robolectric:4.5.1"
+    androidTestImplementation "androidx.test.ext:junit-ktx:1.1.2"
+    androidTestImplementation "androidx.test.espresso:espresso-core:3.3.0"
+    androidTestImplementation "com.google.truth:truth:1.1.2"
+    androidTestImplementation "androidx.arch.core:core-testing:2.1.0"
+    androidTestImplementation "androidx.test:rules:1.3.0"
+    androidTestImplementation "androidx.test:runner:1.3.0"
+    androidTestImplementation "androidx.test:core-ktx:1.3.0"
+    androidTestImplementation "androidx.test.ext:junit:1.1.2"
+
+    implementation 'com.gitee.jiang_li_jie_j:awesome-downloader:v1.2.2-alpha'
+}
