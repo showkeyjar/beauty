@@ -1,5 +1,6 @@
 # Byte-compiled / optimized / DLL files
 __pycache__/
+FER2013_VGG19/
 *.py[cod]
 *$py.class
 

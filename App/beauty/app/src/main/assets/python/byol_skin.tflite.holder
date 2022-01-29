@@ -1,0 +1,4 @@
+please train same named file from: 
+dl\solo-learn\train_skin.sh
+and convert it to tflite
+dl\pytorch2tflite.sh
