@@ -1,14 +1,30 @@
-# 爱美丽
+# 爱美丽 Beauty
 
-爱美丽是一款美颜智能应用，目标是提高用户颜值，包括：
+[简体中文](./readme_cn.md)
 
-颜值评测，颜值报告，改进方案，颜值PK等
+## Features
 
-目前版本实现了颜值评测、颜值报告(仅适用亚洲女性)
+Beauty is a AI model drive app that can help user become beautiful.
 
-最新Android版下载(所有推断均在本地进行)：
+it contain those functions:
+
+1. face score cheek
+
+2. face beauty report
+
+3. face imporve proposals
+
+4. face comparison ( pk )
+
+right now, it can only support asian women
+
+and other function is under construction
+
+The latest Android Version download:
 
 https://gitee.com/knifecms/beauty/releases
+
+(there is no web connection data transfer, every function works in mobile locally )
 
 | 
 <img src="https://images.gitee.com/uploads/images/2021/1113/184617_abba5aa6_6788.jpeg" width="240px" /> |
@@ -17,77 +33,95 @@ https://gitee.com/knifecms/beauty/releases
 |---|---|---|
 
 
-## Face Rank Project
+## Project Introduce
 
-颜值评测 [检测原理](./doc/beauty.pdf)
 
-由于特征较多，使用 MLFeatureSelection 筛选特征
+### 1.face contour detection
 
-### 1.人脸轮廓检测
+use Dlib 
 
-Dlib 人脸关键点检测
-
-### 2.皮肤检测
+### 2.face skin detection
 
 byol + lda
 
-### 3.整体特征
+### 3.Overall characteristics
 
 resnet
 
-## 运行环境
+## Sub projects
+
+1. [android beauty app](./App/readme.md)
+
+2. [deep learning face beauty research](./dl/readme.md)
+
+3. [asian face leaderboard](./leaderboard/readme.md)
+
+
+## Environment
+
 - Python 3.8
 
-## 使用方法
+## Usage in python
 
-#### 1.clone整个项目;
+#### 1.clone:
 
     git clone https://gitee.com/knifecms/beauty.git
 
-#### 2.安装依赖;
+#### 2.Install depend;
 
-##### 2.1 独立安装：
+##### 2.1 new install:
 
     conda install cmake
     conda install nodejs
     conda install dlib
 
-##### 2.2 导入conda环境：
+##### 2.2 Import conda env：
 
     conda env create -f face.yaml
-    默认windows环境
-    linux环境请使用pip install
 
-#### 3.修改 predict.py 中的图片路径
+#### 3.Modify predict.py image path
 
-    # 修改为需要预测的美女图片
+    # change the detect image path
     test = "data/2.jpg"
 
-#### 4.执行预测，即可得到颜值分[0-5]，分数越高颜值越高
+#### 4.Execute:
 
     python predict.py
 
-#### 5.预测结果解释：
+    you can get beauty score in [0-5], the higher the better
 
-    依次执行 landmarks/ 目录下的 1_gen_feature.py 2_prepare_data.py 即可生成 data/face/features.csv 文件
+#### 5.Interpretation of results:
+
+    execute dir landmarks/ 
+    
+        1_gen_feature.py 
+        
+        2_prepare_data.py 
+        
+    gen features in: data/face/features.csv
+
+    then run:
     
     python predict_interpret.py
 
-#### 6.执行摄像头下的实时预测
+#### 6.run in cam:
 
     python predict_cam.py
 
-#### 7.运行web预测服务
+#### 7.run web service:
 
     python predict_server.py
-    或者启动服务
+
+    or run:
+    
     ./restart_server.sh
 
-预览地址：
+preview：
 
 http://locahost:5000/pred
 
-包含两种解释lime和shap,推荐使用shap的解释
+
+we use two tech to explain result: lime and shap(recommend)
 
 ![face point](img/point.jpg)
 

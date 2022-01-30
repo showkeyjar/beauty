@@ -1,30 +1,14 @@
-# 爱美丽 Beauty
+# 爱美丽
 
-[简体中文](./readme_cn.md)
+爱美丽是一款美颜智能应用，目标是提高用户颜值，包括：
 
-## Features
+颜值评测，颜值报告，改进方案，颜值PK等
 
-Beauty is a AI model drive app that can help user become beautiful.
+目前版本实现了颜值评测、颜值报告(仅适用亚洲女性)
 
-it contain those functions:
-
-1. face score cheek
-
-2. face beauty report
-
-3. face imporve proposals
-
-4. face comparison ( pk )
-
-right now, it can only support asian women
-
-and other function is under construction
-
-The latest Android Version download:
+最新Android版下载(所有推断均在本地进行)：
 
 https://gitee.com/knifecms/beauty/releases
-
-(there is no web connection data transfer, every function works in mobile locally )
 
 | 
 <img src="https://images.gitee.com/uploads/images/2021/1113/184617_abba5aa6_6788.jpeg" width="240px" /> |
@@ -33,86 +17,77 @@ https://gitee.com/knifecms/beauty/releases
 |---|---|---|
 
 
-## Project Introduce
+## Face Rank Project
 
+颜值评测 [检测原理](./doc/beauty.pdf)
 
-### 1.face contour detection
+由于特征较多，使用 MLFeatureSelection 筛选特征
 
-use Dlib 
+### 1.人脸轮廓检测
 
-### 2.face skin detection
+Dlib 人脸关键点检测
+
+### 2.皮肤检测
 
 byol + lda
 
-### 3.Overall characteristics
+### 3.整体特征
 
 resnet
 
-## Environment
-
+## 运行环境
 - Python 3.8
 
-## Usage in python
+## 使用方法
 
-#### 1.clone:
+#### 1.clone整个项目;
 
     git clone https://gitee.com/knifecms/beauty.git
 
-#### 2.Install depend;
+#### 2.安装依赖;
 
-##### 2.1 new install:
+##### 2.1 独立安装：
 
     conda install cmake
     conda install nodejs
     conda install dlib
 
-##### 2.2 Import conda env：
+##### 2.2 导入conda环境：
 
     conda env create -f face.yaml
+    默认windows环境
+    linux环境请使用pip install
 
-#### 3.Modify predict.py image path
+#### 3.修改 predict.py 中的图片路径
 
-    # change the detect image path
+    # 修改为需要预测的美女图片
     test = "data/2.jpg"
 
-#### 4.Execute:
+#### 4.执行预测，即可得到颜值分[0-5]，分数越高颜值越高
 
     python predict.py
 
-    you can get beauty score in [0-5], the higher the better
+#### 5.预测结果解释：
 
-#### 5.Interpretation of results:
-
-    execute dir landmarks/ 
-    
-        1_gen_feature.py 
-        
-        2_prepare_data.py 
-        
-    gen features in: data/face/features.csv
-
-    then run:
+    依次执行 landmarks/ 目录下的 1_gen_feature.py 2_prepare_data.py 即可生成 data/face/features.csv 文件
     
     python predict_interpret.py
 
-#### 6.run in cam:
+#### 6.执行摄像头下的实时预测
 
     python predict_cam.py
 
-#### 7.run web service:
+#### 7.运行web预测服务
 
     python predict_server.py
-
-    or run:
-    
+    或者启动服务
     ./restart_server.sh
 
-preview：
+预览地址：
 
 http://locahost:5000/pred
 
-
-we use two tech to explain result: lime and shap(recommend)
+包含两种解释lime和shap,推荐使用shap的解释
 
 ![face point](img/point.jpg)
 
