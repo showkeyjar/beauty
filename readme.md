@@ -138,14 +138,11 @@ we use two tech to explain result: lime and shap(recommend)
  https://github.com/brjathu/deepcaps
  )
 
-3.美肤评测（已添加 lbph 特征）；
+3.use lbph in android to detect skin type
 
-4.使用带语义结构的特征（识别特定皮肤纹理等）；
+4.使用带语义结构的特征（识别特定皮肤纹理等）
 
-5.使用深度网络对特征进行抽取
-（使用autokeras探索SCUT-FBP5500数据集生成模型，仅包含亚洲人和白人）；
-
-6.端上应用：
+5.端上应用：
 
     由于cordova摄像头插件无法通过录像的方式捕捉人脸轮廓，暂时弃用
     Android Native C++配置过于复杂，windows下与python兼容性不好
