@@ -11,8 +11,6 @@ from explain_lite import OcclusionSensitivity
 """
 模型解释
 """
-
-# Load TFLite model and allocate tensors.
 model_file = join(dirname(__file__), "model_beauty_q_v2.tflite")
 interpreter = tf.compat.v1.lite.Interpreter(model_path=model_file)
 
@@ -33,15 +31,13 @@ def gen_result(str_data):
         print(img.shape, img.dtype)
         img_width = img.shape[0]
         img_height = img.shape[1]
-        # img = tf.keras.preprocessing.image.load_img("/opt/data/SCUT-FBP5500_v2/Images/train/face/AF1031.jpg", target_size=(img_width, img_height))
-        # img = tf.keras.preprocessing.image.img_to_array(img)
         data = ([img], None)
         # Start explainer
         explainer = OcclusionSensitivity()
         # patch_size 是指分析的间隔，间隔越小越准确，越大速度越快
         # 实际测试patch_size = patch_length只推理1次，推理速度反而变慢，并伴随有光栅
         patch_length = max(img_width, img_height)
-        patch_size = math.floor(patch_length / 50)
+        patch_size = math.floor(patch_length / 100)
         grid = explainer.explain(data, interpreter, class_index=0, patch_size=patch_size)  # 0 is regression class index in train
         print(grid.shape, grid.dtype)
         pil_img = Image.fromarray(grid)

@@ -193,17 +193,9 @@ class HomeFragment : Fragment() {
         super.onDestroyView()
         _binding = null
         try{
-            ageModelInterpreter.close()
-        }catch (e: Exception){}
-        try{
-            genderModelInterpreter.close()
-        }catch (e: Exception){}
-        try{
-            beautyModelInterpreter.close()
-        }catch (e: Exception){}
-        try{
             db.close()
         }catch (e: Exception){}
+        closeModel()
     }
 
     // Suspending function to initialize the TFLite interpreters.
@@ -226,10 +218,25 @@ class HomeFragment : Fragment() {
                 interpreter = skinModelInterpreter
             }
             // Notify the user once the models have been initialized.
-            Toast.makeText( requireActivity().getApplicationContext() , "模型初始化..." , Toast.LENGTH_LONG ).show()
+            // Toast.makeText( requireActivity().getApplicationContext() , "模型初始化..." , Toast.LENGTH_LONG ).show()
         }
     }
 
+    private fun closeModel(){
+        //考虑到Mobile内存资源有限，模型使用完后就卸载
+        try{
+            ageModelInterpreter.close()
+        }catch (e: Exception){}
+        try{
+            genderModelInterpreter.close()
+        }catch (e: Exception){}
+        try{
+            beautyModelInterpreter.close()
+        }catch (e: Exception){}
+        try{
+            skinModelInterpreter.close()
+        }catch (e: Exception){}
+    }
 
     private fun modelInit() {
         //自动选择最合适的推理技术
@@ -274,7 +281,7 @@ class HomeFragment : Fragment() {
     }
 
     private fun skinReport(){
-        // 皮肤检测
+        // todo 皮肤检测
     }
 
     private fun saveFaceScore(){
@@ -300,6 +307,8 @@ class HomeFragment : Fragment() {
     }
 
     suspend fun genFaceReport(py: Python, reportImageView: ImageView, textViewFacePart:TextView) = coroutineScope {
+        // 由于分析人脸占用内存较大，所以先主动关闭其他模型
+        closeModel()
         var bones = ArrayList<ArrayList<Array<Float>>>()
         var do_face_part = async(Dispatchers.IO){
             // output FaceContour score
