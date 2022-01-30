@@ -4,7 +4,7 @@
 
 ## Features
 
-Beauty is a AI model drive app that can help user become beautiful.
+Beauty is an AI drive app that can help user become beautiful.
 
 it contain those functions:
 
