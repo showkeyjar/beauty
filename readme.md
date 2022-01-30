@@ -56,6 +56,7 @@ resnet
 
 3. [asian face leaderboard](./leaderboard/readme.md)
 
+    and leaderboard website: http://1mei.fit
 
 ## Environment
 
@@ -127,79 +128,52 @@ we use two tech to explain result: lime and shap(recommend)
 
 ![face_reoprt](img/report.jpg)
 
-## Questions
-
-1.使用关键点位置判断是否科学？
-
-    关键点位置 + 皮肤 + 配比
-
-2.使用人脸变换(face morph)作为美颜目标是否恰当？
-
-    使用Face Pose Net重建3d人脸
-
-3.检测美是否可以反其道行之，用模型检测丑？
-
-    todo 缺陷检测
-
-## Problems
-
-1.颜值解释运行过于缓慢，需要优化
-
-  已优化(todo 改用集成评估策略)
-
-2.颜值解释说明需要配截图
-
-  已优化
-
-3.需要对人脸校正
-
-  已优化
-
 ## Todo
 
-1.尝试使用 MediaPipe 捕获摄像头人脸；
+1.redesign the face report, do not use AI explain framework but combine small face part scores.
 
-2.尝试使用尺度熵+xgb替换CNN；
-
-3.尝试使用 TFQ 加速模型训练过程；(已应用)
-
-### DEV:
-
-训练数据集：
-
-https://github.com/HCIILAB/SCUT-FBP5500-Database-Release
-
-
-### 未来计划
-
-1.颜值解释（已添加点位和身体部位对应名称）；
+2.颜值解释（已添加点位和身体部位对应名称）；
 (使用传统切割手段 和 
 胶囊图网络Capsule GNN 对比使用 https://github.com/benedekrozemberczki/CapsGNN
  https://github.com/brjathu/deepcaps
  )
 
-2.美肤评测（已添加 lbph 特征）；
+3.美肤评测（已添加 lbph 特征）；
 
-3.使用带语义结构的特征（识别特定皮肤纹理等）；
+4.使用带语义结构的特征（识别特定皮肤纹理等）；
 
-4.使用深度网络对特征进行抽取
+5.使用深度网络对特征进行抽取
 （使用autokeras探索SCUT-FBP5500数据集生成模型，仅包含亚洲人和白人）；
 
-![ak net](./img/s1.png)
-
-5.端上应用：
+6.端上应用：
 
     由于cordova摄像头插件无法通过录像的方式捕捉人脸轮廓，暂时弃用
     Android Native C++配置过于复杂，windows下与python兼容性不好
 
+### DEV:
 
-## 端上开发
+train data:
 
-使用 Android Studio 打开 App/beauty
+https://github.com/HCIILAB/SCUT-FBP5500-Database-Release
 
-代替 firebase -> 21yunbox.com
+Directory description:
 
-## 参考
+    App     	移动端项目
+    dl          深度神经网络训练过程
+    doc         文档
+    feature     特征处理
+    landmarks   人脸关键点提取过程
+    leaderboard 人脸排行榜
+    logs        日志目录
+    model       模型二进制文件
+    static      flask服务静态文件
+    template    flask服务模版文件
+    test        测试目录
+
+
+![ak net](./img/s1.png)
+
+## reference
 
 《女性美容美体小百科》
 
@@ -209,7 +183,7 @@ https://wenku.baidu.com/view/29392bbb9fc3d5bbfd0a79563c1ec5da50e2d6eb.html
 
 https://max.book118.com/html/2017/1115/140076049.shtm
 
-## 其他研究进展
+## Other research progress
 
 https://github.com/bknyaz/beauty_vision
 
@@ -228,26 +202,12 @@ Understanding Beauty via Deep Facial Features:
 https://arxiv.org/pdf/1902.05380.pdf
 
 
-## 欢迎贡献
+## Welcome contributions
 
-欢迎提出宝贵意见及贡献代码
 
-QQ交流群：740807335
+QQ group: 740807335
 
-加微信进微信群：
+wechat:
 
 ![wechat](img/wechat.png)
 
-开发目录说明：
-
-    App     	移动端项目
-    dl          深度神经网络训练过程
-    doc         文档
-    feature     特征处理
-    landmarks   人脸关键点提取过程
-    leaderboard 人脸排行榜
-    logs        日志目录
-    model       模型二进制文件
-    static      flask服务静态文件
-    template    flask服务模版文件
-    test        测试目录
