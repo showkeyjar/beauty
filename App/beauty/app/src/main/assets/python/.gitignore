@@ -1,4 +1,4 @@
 __pycache__
 byol_skin.tflite
 model_beauty_q_v2.tflite
-shape_predictor_68_face_landmarks.data
+shape_predictor_68_face_landmarks.dat
