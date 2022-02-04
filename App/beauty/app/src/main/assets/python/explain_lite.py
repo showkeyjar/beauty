@@ -92,7 +92,6 @@ class OcclusionSensitivity:
                 sensitivity_map.shape[0]  # pylint: disable=unsubscriptable-object
             )
         ]
-        print(interpreter.get_input_details())
         # predictions = model.predict(np.array(patches), batch_size=self.batch_size)
         # 单次处理
         predictions = []
@@ -106,6 +105,7 @@ class OcclusionSensitivity:
         # todo 依然较慢，要考虑如何加快推理速度
         interpreter.resize_tensor_input(interpreter.get_input_details()[0]['index'],[1, 96, 96, 3], strict=True)
         interpreter.allocate_tensors()
+        print("interpreter input:" + str(interpreter.get_input_details()))
         for patch in patches:
             interpreter.set_tensor(interpreter.get_input_details()[0]['index'], [patch])
             interpreter.invoke()

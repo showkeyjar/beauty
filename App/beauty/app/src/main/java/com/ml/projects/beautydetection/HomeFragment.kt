@@ -276,10 +276,6 @@ class HomeFragment : Fragment() {
         dispatchSelectPictureIntent()
     }
 
-    private fun faceReport() {
-        showFaceReportDialog()
-    }
-
     private fun skinReport(){
         // todo 皮肤检测
     }
@@ -306,9 +302,10 @@ class HomeFragment : Fragment() {
         Log.i("joinTop", "join user info to top")
     }
 
-    suspend fun genFaceReport(py: Python, reportImageView: ImageView, textViewFacePart:TextView) = coroutineScope {
+    suspend fun genFaceReport(py: Python, reportImageView: ImageView, textViewFacePart:TextView, genReportButton:Button) = coroutineScope {
         // 由于分析人脸占用内存较大，所以先主动关闭其他模型
         closeModel()
+        var can_gen_report = false
         var bones = ArrayList<ArrayList<Array<Float>>>()
         var do_face_part = async(Dispatchers.IO){
             // output FaceContour score
@@ -375,12 +372,18 @@ class HomeFragment : Fragment() {
                 }
             }
             do_part_score.await()
+            if (parts.size>0){
+                can_gen_report = true
+            }
             textViewFacePart.text = parts.joinToString(separator = ",")
         }
         progressDialog.dismiss()
+        if(can_gen_report){
+            genReportButton.isEnabled = true
+        }
     }
 
-    private fun showFaceReportDialog(){
+    private fun faceReport(){
         val alertDialogBuilder = AlertDialog.Builder(requireContext())
         alertDialogBuilder.setCancelable( false )
         // 人脸分析
@@ -412,7 +415,7 @@ class HomeFragment : Fragment() {
         progressDialog.show()
         if(reportFace != null){
             CoroutineScope(Dispatchers.Main).launch {
-                genFaceReport(py, reportImageView, textViewFacePart)
+                genFaceReport(py, reportImageView, textViewFacePart, genReportButton)
             }
         }
         else{

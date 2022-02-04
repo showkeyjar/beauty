@@ -80,6 +80,7 @@
         android:layout_marginTop="64dp"
         android:layout_marginEnd="16dp"
         android:layout_marginBottom="32dp"
+        android:enabled="false"
         android:text="生成颜值报告"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
