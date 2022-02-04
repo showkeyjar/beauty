@@ -104,7 +104,7 @@ class OcclusionSensitivity:
         
         # 这里将单次处理改为批处理，否则处理速度太慢
         # todo 依然较慢，要考虑如何加快推理速度
-        # interpreter.resize_tensor_input(interpreter.get_input_details()[0]['index'],[len(patches), 300, 300, 3])
+        interpreter.resize_tensor_input(interpreter.get_input_details()[0]['index'],[1, 96, 96, 3], strict=True)
         interpreter.allocate_tensors()
         for patch in patches:
             interpreter.set_tensor(interpreter.get_input_details()[0]['index'], [patch])

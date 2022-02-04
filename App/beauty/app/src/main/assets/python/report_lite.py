@@ -25,10 +25,10 @@ def gen_result(str_data):
         decode_data = base64.b64decode(str_data)
         np_data = np.fromstring(decode_data, np.uint8)
         old_img = cv2.imdecode(np_data, cv2.IMREAD_UNCHANGED)
-        img = cv2.resize(old_img, (300, 300), interpolation=cv2.INTER_NEAREST)
+        img = cv2.resize(old_img, (96, 96), interpolation=cv2.INTER_NEAREST)
         img = img.astype(np.float32)
         img /= 255.0
-        print(img.shape, img.dtype)
+        print("explain img:" + str(img.shape) + " " + str(img.dtype))
         img_width = img.shape[0]
         img_height = img.shape[1]
         data = ([img], None)
@@ -38,8 +38,9 @@ def gen_result(str_data):
         # 实际测试patch_size = patch_length只推理1次，推理速度反而变慢，并伴随有光栅
         patch_length = max(img_width, img_height)
         patch_size = math.floor(patch_length / 100)
+        patch_size = 1 if patch_size < 1 else patch_size
         grid = explainer.explain(data, interpreter, class_index=0, patch_size=patch_size)  # 0 is regression class index in train
-        print(grid.shape, grid.dtype)
+        print("get explained:" + str(grid.shape) + " " + str(grid.dtype))
         pil_img = Image.fromarray(grid)
         buff = io.BytesIO()
         pil_img.save(buff, format="PNG")
@@ -47,6 +48,14 @@ def gen_result(str_data):
     except Exception as e:
         print(e)
     return None
+
+
+def gen_result_new(str_data):
+    """
+    todo 新的颜值解释
+    1.不同部位得分
+    2.累计得分
+    """
 
 
 if __name__=="__main__":
