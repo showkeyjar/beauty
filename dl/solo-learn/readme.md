@@ -13,3 +13,20 @@ git clone https://github.com/vturrisi/solo-learn.git
 
 选择lda分类器: https://github.com/rmsander/spatial_LDA
 
+## 0.取得局部数据
+
+    0.get_face_part_dlib.py
+
+## 1.皮肤模型
+
+    skin/
+    train_skin.sh
+    save_byol.py
+    predict.py
+    train_lda.ipynb
+
+## 2.额头模型
+
+    forehead/
+    train_forehead.sh
+

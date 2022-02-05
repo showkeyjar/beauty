@@ -5,16 +5,16 @@ import numpy as np
 from os.path import dirname, join
 """
 使用dlib获取不同位置
-部位评分 无需使用dlib，google ml-kit face-detection模型也支持人脸关键点及轮廓点的提取
+部位评分 无需使用dlib, google ml-kit face-detection模型也支持人脸关键点及轮廓点的提取
 dlib用于训练部位分类模型
 https://developers.google.com/ml-kit/vision/face-detection/android
 
-注意部位都是彩图，不是二维 [x,y,ch],所以不能轻易 reshape
+注意部位都是彩图, 不是二维 [x,y,ch],所以不能轻易 reshape
 
 create contour
 https://stackoverflow.com/questions/14161331/creating-your-own-contour-in-opencv-using-python
 
-todo contours 以顺时针顺序连接，注意检查
+todo contours 以顺时针顺序连接, 注意检查
 """
 dlib_face_part = {
     "center":

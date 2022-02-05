@@ -16,12 +16,15 @@ pip install opencv-python
 """
 # gen_parts = ["nose_bridge", "nose_tip", "upper_lip", "lower_lip", "jaw", "left_cheek", "right_cheek", "forehead"]
 # 由于这里只关注皮肤的肤质，所以训练时可以统一到同样的尺寸，让模型不必关注尺寸
-gen_parts = {"left_cheek": (80, 96), "right_cheek": (80, 96)}
 
 file_format = "/opt/data/SCUT-FBP5500_v2/Images/train/face/AF*.jpg"
 
+
 if __name__=="__main__":
     # ps -ef|grep "python 0.get_skin_dlib" | awk '{print $2}' | xargs kill -9
+    resize = None
+    # gen_parts = {"left_cheek": (80, 96), "right_cheek": (80, 96)}
+    gen_parts = {"forehead": None}
     af_files = glob.glob(file_format)
     for img_path in af_files:
         image = cv2.imread(img_path) 
@@ -32,7 +35,13 @@ if __name__=="__main__":
             save_file1 = save_file.replace(".jpg", p + ".jpg")
             if not os.path.exists(save_file1) and p in part_img and part_img[p] is not None:
                 pic = part_img[p]
-                pic = cv2.resize(pic, v, interpolation=cv2.INTER_LINEAR)
+                # 使用第一张图片的尺寸作为标准尺寸
+                if resize is None:
+                    if v is None:
+                        v = pic.shape
+                    resize = v
+                if resize is not None:
+                    pic = cv2.resize(pic, resize, interpolation=cv2.INTER_LINEAR)
                 cv2.imwrite(save_file1, pic)
                 print("save part ", p, " file:", save_file1)
         # save_file = save_file.replace(".jpg", ".pkl")
