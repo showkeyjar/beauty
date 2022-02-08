@@ -67,6 +67,8 @@ resnet
 #### 1.clone:
 
     git clone https://gitee.com/knifecms/beauty.git
+    or
+    git clone https://github.com/showkeyjar/beauty.git
 
 #### 2.Install depend;
 
@@ -132,7 +134,7 @@ we use two tech to explain result: lime and shap(recommend)
 
 1.redesign the face report, do not use AI explain framework but combine small face part scores.
 
-2.颜值解释（已添加点位和身体部位对应名称）；
+2.face score explain（已添加点位和身体部位对应名称）；
 (使用传统切割手段 和 
 胶囊图网络Capsule GNN 对比使用 https://github.com/benedekrozemberczki/CapsGNN
  https://github.com/brjathu/deepcaps
@@ -140,12 +142,7 @@ we use two tech to explain result: lime and shap(recommend)
 
 3.use lbph in android to detect skin type
 
-4.使用带语义结构的特征（识别特定皮肤纹理等）
-
-5.端上应用：
-
-    由于cordova摄像头插件无法通过录像的方式捕捉人脸轮廓，暂时弃用
-    Android Native C++配置过于复杂，windows下与python兼容性不好
+4.use semantic structural features（识别特定皮肤纹理等）
 
 ### DEV:
 
@@ -155,17 +152,17 @@ https://github.com/HCIILAB/SCUT-FBP5500-Database-Release
 
 Directory description:
 
-    App     	移动端项目
-    dl          深度神经网络训练过程
-    doc         文档
-    feature     特征处理
-    landmarks   人脸关键点提取过程
-    leaderboard 人脸排行榜
-    logs        日志目录
-    model       模型二进制文件
-    static      flask服务静态文件
-    template    flask服务模版文件
-    test        测试目录
+    App     	    android project
+    dl              deep learning models
+    doc             documents
+    feature         face features
+    landmarks       face landmarks process
+    leaderboard     asian face leaderboard
+    logs            log dirs
+    model           trained models
+    static          flask web assets
+    template        flask templates
+    test            unit test
 
 
 ![ak net](./img/s1.png)

@@ -1,5 +1,7 @@
 # 爱美丽
 
+[ENGLISH](./readme.md)
+
 爱美丽是一款美颜智能应用，目标是提高用户颜值，包括：
 
 颜值评测，颜值报告，改进方案，颜值PK等
@@ -43,6 +45,8 @@ resnet
 #### 1.clone整个项目;
 
     git clone https://gitee.com/knifecms/beauty.git
+    or
+    git clone https://github.com/showkeyjar/beauty.git
 
 #### 2.安装依赖;
 

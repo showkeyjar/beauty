@@ -306,6 +306,33 @@ class HomeFragment : Fragment() {
         // 由于分析人脸占用内存较大，所以先主动关闭其他模型
         closeModel()
         var can_gen_report = false
+        var finish_score = false
+        System.gc()
+        val do_face_score = async(Dispatchers.IO) {
+            val inputFace = (sampleImageView.getDrawable() as BitmapDrawable).bitmap
+            var encodingStr = bitmapToString(inputFace)
+            try {
+                val bytes = py.getModule("report_lite").callAttr("gen_result", encodingStr)
+                    .toJava(ByteArray::class.java)
+                reportBitMap = BitmapFactory.decodeByteArray(bytes, 0, bytes.size)
+            }catch (e: Exception) {
+                Log.i("error", e.toString())
+                textViewFacePart.text = "分析错误，请换张图片试试!"
+            }finally {
+                finish_score = true
+            }
+        }
+
+        var do_progress = async(Dispatchers.IO){
+            var wait_step = 0
+            while(!finish_score){
+                Thread.sleep(3000)
+                progressDialog.setMessage("分析人脸" + ".".repeat(wait_step))
+                wait_step++
+            }
+        }
+        do_face_score.await()
+
         var bones = ArrayList<ArrayList<Array<Float>>>()
         var do_face_part = async(Dispatchers.IO){
             // output FaceContour score
@@ -323,32 +350,10 @@ class HomeFragment : Fragment() {
                 bones.add(c_points)
             }
         }
-        var finish_score = false
-        val do_face_score = async(Dispatchers.IO) {
-            val inputFace = (sampleImageView.getDrawable() as BitmapDrawable).bitmap
-            var encodingStr = bitmapToString(inputFace)
-            try {
-                val bytes = py.getModule("report_lite").callAttr("gen_result", encodingStr)
-                    .toJava(ByteArray::class.java)
-                reportBitMap = BitmapFactory.decodeByteArray(bytes, 0, bytes.size)
-            }catch (e: Exception) {
-                Log.i("error", e.toString())
-                textViewFacePart.text = "分析错误，请换张图片试试!"
-            }finally {
-                finish_score = true
-            }
-        }
+
         do_face_part.await()
         progressDialog.setMessage( "取得人脸部位 ...")
-        var do_progress = async(Dispatchers.IO){
-            var wait_step = 0
-            while(!finish_score){
-                Thread.sleep(3000)
-                progressDialog.setMessage("计算部位得分" + ".".repeat(wait_step))
-                wait_step++
-            }
-        }
-        do_face_score.await()
+
         if (::reportBitMap.isInitialized) {
             reportImageView.setImageBitmap(reportBitMap)
             do_progress.await()
