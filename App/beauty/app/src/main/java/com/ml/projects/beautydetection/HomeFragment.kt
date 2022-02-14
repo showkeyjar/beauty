@@ -304,7 +304,7 @@ class HomeFragment : Fragment() {
 
     suspend fun genFaceReport(py: Python, reportImageView: ImageView, textViewFacePart:TextView, genReportButton:Button) = coroutineScope {
         // 由于分析人脸占用内存较大，所以先主动关闭其他模型
-        closeModel()
+        // closeModel()
         var can_gen_report = false
         var finish_score = false
         System.gc()
