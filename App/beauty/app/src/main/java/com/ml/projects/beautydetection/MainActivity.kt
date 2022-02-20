@@ -35,7 +35,7 @@ class MainActivity : AppCompatActivity() {
         navView.setupWithNavController(navController)
 
         UMConfigure.preInit(this, "6190a755e0f9bb492b5a4391", "Umeng")
-        UMConfigure.init(this, "59892f08310c9307b60023d0", "Umeng", UMConfigure.DEVICE_TYPE_PHONE, "")
+        UMConfigure.init(this, "6190a755e0f9bb492b5a4391", "Umeng", UMConfigure.DEVICE_TYPE_PHONE, "")
 
         //前台服务模式启动（独立启动，直至服务被kill或关闭）传入能创建服务的ContextWrapper
         // AwesomeDownloader.initWithServiceMode(this)
