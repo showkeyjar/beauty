@@ -160,9 +160,9 @@ class HomeFragment : Fragment() {
         //相册
         var selectImageButton: Button = binding.selectImageButton
         selectImageButton.setOnClickListener { selectImage() }
-        //颜值分析
-        var faceButton: Button = binding.faceButton
-        faceButton.setOnClickListener { faceReport() }
+        //颜值分析(暂时取消)
+        // var faceButton: Button = binding.faceButton
+        // faceButton.setOnClickListener { faceReport() }
         //皮肤分析
 //        var skinButton: Button = binding.skinButton
 //        skinButton.setOnClickListener{ skinReport() }
@@ -300,132 +300,6 @@ class HomeFragment : Fragment() {
     private fun joinTop(){
         // todo 参与颜值排行
         Log.i("joinTop", "join user info to top")
-    }
-
-    suspend fun genFaceReport(py: Python, reportImageView: ImageView, textViewFacePart:TextView, genReportButton:Button) = coroutineScope {
-        // 由于分析人脸占用内存较大，所以先主动关闭其他模型
-        // closeModel()
-        var can_gen_report = false
-        var finish_score = false
-        System.gc()
-        val do_face_score = async(Dispatchers.IO) {
-            val inputFace = (sampleImageView.getDrawable() as BitmapDrawable).bitmap
-            var encodingStr = bitmapToString(inputFace)
-            try {
-                val bytes = py.getModule("report_lite").callAttr("gen_result", encodingStr)
-                    .toJava(ByteArray::class.java)
-                reportBitMap = BitmapFactory.decodeByteArray(bytes, 0, bytes.size)
-            }catch (e: Exception) {
-                Log.i("error", e.toString())
-                textViewFacePart.text = "分析错误，请换张图片试试!"
-            }finally {
-                finish_score = true
-            }
-        }
-
-        var do_progress = async(Dispatchers.IO){
-            var wait_step = 0
-            while(!finish_score){
-                Thread.sleep(3000)
-                progressDialog.setMessage("分析人脸" + ".".repeat(wait_step))
-                wait_step++
-            }
-        }
-        do_face_score.await()
-
-        var bones = ArrayList<ArrayList<Array<Float>>>()
-        var do_face_part = async(Dispatchers.IO){
-            // output FaceContour score
-            // https://developers.google.com/ml-kit/vision/face-detection/face-detection-concepts#contours
-            Log.i("contour", "get face contour parts")
-            var bbox = reportFace.boundingBox
-            var contours = reportFace.allContours
-            for(contour in contours){
-                var c_points = ArrayList<Array<Float>>()
-                for(p in contour.points){
-                    var c_point = arrayOf(p.x - (bbox.left - 0 * shift), p.y - (bbox.top + shift))
-                    c_points.add(c_point)
-                }
-                Log.i(contour.faceContourType.toString(), "contour:[" + contour.faceContourType.toString() + "]" + c_points.toString())
-                bones.add(c_points)
-            }
-        }
-
-        do_face_part.await()
-        progressDialog.setMessage( "取得人脸部位 ...")
-
-        if (::reportBitMap.isInitialized) {
-            reportImageView.setImageBitmap(reportBitMap)
-            do_progress.await()
-            var parts = ArrayList<String>()
-            progressDialog.setMessage("检测缺陷 ...")
-            var do_part_score = async(Dispatchers.IO) {
-                var reportStr = bitmapToString(reportBitMap)
-                val array: Array<Array<Array<Float>>?> = arrayOfNulls(bones.size)
-                for (i in 0 until bones.size) {
-                    val row: ArrayList<Array<Float>> = bones.get(i)
-                    array[i] = row.toArray(arrayOfNulls(row.size))
-                }
-                val scores: Map<PyObject, PyObject> =
-                    py.getModule("part_mlkit").callAttr("get_contour_values", reportStr, array)
-                        .asMap()
-                Log.i("contour", "face_part scores:" + scores.toString())
-                for ((key, value) in scores) {
-                    if (value.toFloat() > 0.0) {
-                        facePartName.get(key.toString())?.let { parts.add(it) }
-                    }
-                }
-            }
-            do_part_score.await()
-            if (parts.size>0){
-                can_gen_report = true
-            }
-            textViewFacePart.text = parts.joinToString(separator = ",")
-        }
-        progressDialog.dismiss()
-        if(can_gen_report){
-            genReportButton.isEnabled = true
-        }
-    }
-
-    private fun faceReport(){
-        val alertDialogBuilder = AlertDialog.Builder(requireContext())
-        alertDialogBuilder.setCancelable( false )
-        // 人脸分析
-        val faceView = layoutInflater.inflate( R.layout.beauty_report, null )
-        var genReportButton : Button = faceView.findViewById( R.id.report_button)
-        val closeButton : Button = faceView.findViewById( R.id.close_button )
-        var reportImageView : ImageView = faceView.findViewById( R.id.beauty_report_imageview )
-        var textViewFacePart: TextView = faceView.findViewById( R.id.textViewFacePart )
-
-        alertDialogBuilder.setView(faceView)
-        val dialog = alertDialogBuilder.create()
-        dialog.show()
-
-        genReportButton.setOnClickListener{
-            val intent = Intent(getActivity(), BeautyReportActivity::class.java)
-            intent.putExtra("face_part", textViewFacePart.text)
-            intent.putExtra("face_name", reportRecord["name"])
-            intent.putExtra("face_age", reportRecord["age"].toString())
-            intent.putExtra("face_score", reportRecord["score"].toString())
-            intent.putExtra("face_skin", reportRecord["skin"].toString())
-            startActivity(intent)
-        }
-
-        closeButton.setOnClickListener {
-            dialog.dismiss()
-        }
-
-        progressDialog.setMessage( "分析人脸 ...")
-        progressDialog.show()
-        if(reportFace != null){
-            CoroutineScope(Dispatchers.Main).launch {
-                genFaceReport(py, reportImageView, textViewFacePart, genReportButton)
-            }
-        }
-        else{
-            progressDialog.dismiss()
-        }
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {

@@ -4,7 +4,7 @@ import math
 import numpy as np
 from os.path import dirname, join
 """
-使用dlib获取不同位置
+使用mlkit获取不同位置
 部位评分 无需使用dlib, google ml-kit face-detection模型也支持人脸关键点及轮廓点的提取
 dlib用于训练部位分类模型
 https://developers.google.com/ml-kit/vision/face-detection/android
@@ -29,26 +29,17 @@ dlib_face_part = {
     },
     "inside":
     {
-        "left_eye": [36, 37, 38, 39, 40, 41],
-        "right_eye": [42, 43, 44, 45, 46, 47],
         "nose_tip": [30, 31, 32, 33, 34, 35],
-        "mouse": [60, 61, 62, 63, 64, 65, 66, 67],
-        "upper_lip": [48, 49, 50, 51, 52, 53, 54, 60, 61, 62, 63, 64],
-        "lower_lip": [60, 67, 66, 65, 64, 48, 59, 58, 57, 56, 55, 54],
+        "mouse": {},
         "jaw": [48, 59, 58, 57, 56, 55, 54, 5, 6, 7, 8, 9, 10, 11],
-        "left_cheek": [1, 36, 41, 40, 39, 31, 48, 3, 2],
-        "right_cheek": [42, 47, 46, 45, 15, 14, 13, 54, 35],
+        "left_cheek": {"FACE_OVAL": [25, 26, 27, 28, 29], "LEFT_EYE": [15, 14, 13, 12, 11, 10, 9, 8], "NOSE_BRIDGE": [0, 1], "NOSE_BOTTOM": [0], "UPPER_LIP_TOP": [0]},
+        "right_cheek": {},
     },
     "top":
     {
         "forehead": [0, 17, 18, 19, 20, 21, 27, 22, 23, 24, 25, 26, 16],
     }
 }
-
-
-detector = dlib.get_frontal_face_detector()
-model_file = join(dirname(__file__), "shape_predictor_68_face_landmarks.dat")
-predictor = dlib.shape_predictor(model_file)
 
 
 def array_to_img(full_data):
@@ -172,28 +163,29 @@ def shape_to_np(shape, dtype="int"):
 	return coords
 
 
-def get_face_parts(img, ptype=None):
+def get_face_parts(img, points, ptype=None):
     """
     根据评测结果图片返回各部分得分
+    
+    points已由mlkit在kotlin中推理出来
     """
-    global dlib_face_part
+    global mlkit_face_part
     part_result = {}
     dets = detector(img, 1)
     if len(dets)>0:
         det = dets[0]
-        shape = predictor(img, det)
         if ptype is None:
-            for p_type,p in dlib_face_part.items():
+            for p_type,p in mlkit_face_part.items():
                 # p_type = center left
                 for p_name, b_indexs in p.items():
                     # p_name = left_eyebrow
-                    bones = [[shape.part(i).x, shape.part(i).y] for i in b_indexs]
+                    bones = [[points[i].x, points[i].y] for i in b_indexs]
                     part_result[p_name] = get_part_value(img, bones, p_type)
         else:
-            p = dlib_face_part[ptype]
+            p = mlkit_face_part[ptype]
             for p_name, b_indexs in p.items():
                 # p_name = left_eyebrow
-                bones = [[shape.part(i).x, shape.part(i).y] for i in b_indexs]
+                bones = [[points[i].x, points[i].y] for i in b_indexs]
                 part_result[p_name] = get_part_value(img, bones, ptype)
     return part_result
 

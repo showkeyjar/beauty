@@ -5,7 +5,7 @@ import numpy as np
 from PIL import Image
 from joblib import load
 from os.path import dirname, join
-from part_dlib import get_face_parts
+from part_mlkit import get_face_parts
 """
 预测皮肤类型
 分两步预测
@@ -19,11 +19,11 @@ model_file = join(dirname(__file__), "lda_skin.jb")
 lda = load(model_file)
 
 
-def cut_cheek(str_data):
+def cut_cheek(str_data, points):
     decode_data = base64.b64decode(str_data)
     np_data = np.fromstring(decode_data, np.uint8)
     image = cv2.imdecode(np_data, cv2.IMREAD_UNCHANGED)
-    part_img = get_face_parts(image, "inside")
+    part_img = get_face_parts(image, points, "inside")
     cheek = None
     if "left_cheek" in part_img:
         cheek = part_img["left_cheek"]

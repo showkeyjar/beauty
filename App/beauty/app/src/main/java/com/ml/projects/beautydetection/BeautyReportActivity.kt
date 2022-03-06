@@ -75,8 +75,8 @@ class BeautyReportActivity : AppCompatActivity(){
             content += row.toString()
         }
         if(::reportRecord.isInitialized){
-            report = Report(id=reportRecord.id,
-                name=reportRecord.name,
+            report = Report(id = reportRecord.id,
+                name = reportRecord.name,
                 age = reportRecord.age,
                 score = reportRecord.score,
                 skin = reportRecord.skin,
@@ -84,7 +84,7 @@ class BeautyReportActivity : AppCompatActivity(){
             )
         }else{
             report = Report(
-                name= name,
+                name = name,
                 age = age.toInt(),
                 score = score.toFloat(),
                 skin = skin.toInt(),
@@ -97,7 +97,6 @@ class BeautyReportActivity : AppCompatActivity(){
         columnModel.setColumnWeight(2, 2)
         tableView.setColumnModel(columnModel)
         tableView.setDataAdapter(SimpleTableDataAdapter(this, data))
-
     }
 
     fun saveResult(v : View){
