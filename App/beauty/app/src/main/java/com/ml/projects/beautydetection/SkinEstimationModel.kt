@@ -3,10 +3,14 @@ package com.ml.projects.beautydetection
 // import android.util.Log
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
-import android.graphics.drawable.BitmapDrawable
+import android.util.Base64
 import android.util.Log
 import com.chaquo.python.Python
-import com.chaquo.python.android.AndroidPlatform
+import com.google.mlkit.vision.common.InputImage
+import com.google.mlkit.vision.face.FaceContour
+import com.google.mlkit.vision.face.FaceDetection
+import com.google.mlkit.vision.face.FaceDetectorOptions
+import com.google.mlkit.vision.face.FaceLandmark
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import org.tensorflow.lite.Interpreter
@@ -19,6 +23,11 @@ import java.io.ByteArrayOutputStream
 // Helper class for face skin estimation model
 class SkinEstimationModel {
 
+    private val highAccuracyOpts = FaceDetectorOptions.Builder()
+        .setPerformanceMode(FaceDetectorOptions.PERFORMANCE_MODE_ACCURATE)
+        .setLandmarkMode(FaceDetectorOptions.LANDMARK_MODE_ALL)
+        .setClassificationMode(FaceDetectorOptions.CLASSIFICATION_MODE_ALL)
+        .build()
     // Input image size for our model
     private val inputImageWidth = 80
     private val inputImageHeight = 96
@@ -35,26 +44,58 @@ class SkinEstimationModel {
                     .add(NormalizeOp(0f, 255f))
                     .build()
 
-    // The model returns a normalized value for the age i.e in range ( 0 , 1 ].
-    // To get the age, we multiply the model's output with p.
-    // private val p = 116
-
-    // Time taken by the model ( in milliseconds ) to perform the inference.
-    var inferenceTime : Long = 0
-
     // Interpreter object to use the TFLite model.
     var interpreter : Interpreter? = null
 
 
-    private fun bitmapToString(inputFace: Bitmap):String{
+    private fun bitmapToString(inputFace: Bitmap): String {
         val stream = ByteArrayOutputStream()
         inputFace.compress(Bitmap.CompressFormat.PNG, 90, stream)
-        val py_image = stream.toByteArray()
-        val encodedString: String = android.util.Base64.encodeToString(py_image, android.util.Base64.DEFAULT)
-        return encodedString
+        val pyImage = stream.toByteArray()
+        return Base64.encodeToString(pyImage, Base64.DEFAULT)
     }
 
-    fun cutImage(inputFace: Bitmap, py:Python){
+    private fun cutImage(inputFace: Bitmap, py:Python){
+        val image = InputImage.fromBitmap(inputFace, 0)
+        val detector = FaceDetection.getClient(highAccuracyOpts)
+        val result = detector.process(image)
+            .addOnSuccessListener { faces ->
+                // Task completed successfully
+                for (face in faces) {
+                    val bounds = face.boundingBox
+                    val rotY = face.headEulerAngleY // Head is rotated to the right rotY degrees
+                    val rotZ = face.headEulerAngleZ // Head is tilted sideways rotZ degrees
+
+                    // If landmark detection was enabled (mouth, ears, eyes, cheeks, and
+                    // nose available):
+                    val leftEar = face.getLandmark(FaceLandmark.LEFT_EAR)
+                    leftEar?.let {
+                        val leftEarPos = leftEar.position
+                    }
+
+                    // If contour detection was enabled:
+                    val leftEyeContour = face.getContour(FaceContour.LEFT_EYE)?.points
+                    val upperLipBottomContour = face.getContour(FaceContour.UPPER_LIP_BOTTOM)?.points
+
+                    // If classification was enabled:
+                    if (face.smilingProbability != null) {
+                        val smileProb = face.smilingProbability
+                    }
+                    if (face.rightEyeOpenProbability != null) {
+                        val rightEyeOpenProb = face.rightEyeOpenProbability
+                    }
+
+                    // If face tracking was enabled:
+                    if (face.trackingId != null) {
+                        val id = face.trackingId
+                    }
+                }
+            }
+            .addOnFailureListener { e ->
+                // Task failed with an exception
+                Log.i("error", e.toString())
+            }
+
         var encodingStr = bitmapToString(inputFace)
         try {
             val bytes = py.getModule("skin_predict").callAttr("cut_cheek", encodingStr)
@@ -82,8 +123,8 @@ class SkinEstimationModel {
         // 1.切割图像
         cutImage(image, py)
         // 2.生成byol特征
-        val scoreOutputArray = Array(1){FloatArray(512)}
-        if(::cheekBitMap.isInitialized){
+        val scoreOutputArray = Array(1) { FloatArray(512) }
+        if (::cheekBitMap.isInitialized) {
             // Input image tensor shape -> [ 1 , 80 , 96 , 3 ]
             val tensorInputImage = TensorImage.fromBitmap(cheekBitMap)
             // Output tensor shape -> [ 1 , 1 ]
@@ -91,14 +132,13 @@ class SkinEstimationModel {
             // Cannot copy to a TensorFlowLite tensor (serving_default_input:0) with 92160 bytes from a Java Buffer with 1080000 bytes.
             // Cannot copy from a TensorFlowLite tensor (PartitionedCall:0) with shape [1, 512] to a Java object with shape [1]
             interpreter?.run(
-                    processedImageBuffer,
-                    scoreOutputArray
+                processedImageBuffer,
+                scoreOutputArray
             )
             // Log.i("Score", scoreOutputArray[0].toString())
         }
         // 3.调用lda
-        var ret = predictClass(scoreOutputArray[0], py)
-        return@withContext ret
+        return@withContext predictClass(scoreOutputArray[0], py)
     }
 }
 

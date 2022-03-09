@@ -11,7 +11,10 @@
     
     删除并重新设计颜值分析
     
-    通过使用MLKit自带的36个人脸关键点提取皮肤特征
+    通过使用MLKit自带的 133 个人脸关键点提取皮肤特征
+    
+    https://developers.google.com/ml-kit/vision/face-detection/android
+
     ![face point](img/face_contours.svg)
     
 
