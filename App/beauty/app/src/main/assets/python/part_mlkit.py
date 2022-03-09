@@ -171,22 +171,19 @@ def get_face_parts(img, points, ptype=None):
     """
     global mlkit_face_part
     part_result = {}
-    dets = detector(img, 1)
-    if len(dets)>0:
-        det = dets[0]
-        if ptype is None:
-            for p_type,p in mlkit_face_part.items():
-                # p_type = center left
-                for p_name, b_indexs in p.items():
-                    # p_name = left_eyebrow
-                    bones = [[points[i].x, points[i].y] for i in b_indexs]
-                    part_result[p_name] = get_part_value(img, bones, p_type)
-        else:
-            p = mlkit_face_part[ptype]
+    if ptype is None:
+        for p_type,p in mlkit_face_part.items():
+            # p_type = center left
             for p_name, b_indexs in p.items():
                 # p_name = left_eyebrow
                 bones = [[points[i].x, points[i].y] for i in b_indexs]
-                part_result[p_name] = get_part_value(img, bones, ptype)
+                part_result[p_name] = get_part_value(img, bones, p_type)
+    else:
+        p = mlkit_face_part[ptype]
+        for p_name, b_indexs in p.items():
+            # p_name = left_eyebrow
+            bones = [[points[i].x, points[i].y] for i in b_indexs]
+            part_result[p_name] = get_part_value(img, bones, ptype)
     return part_result
 
 

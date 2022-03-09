@@ -75,6 +75,7 @@ class SkinEstimationModel {
 
                     // If contour detection was enabled:
                     val leftEyeContour = face.getContour(FaceContour.LEFT_EYE)?.points
+                    Log.i("face contour", leftEyeContour.toString())
                     val upperLipBottomContour = face.getContour(FaceContour.UPPER_LIP_BOTTOM)?.points
 
                     // If classification was enabled:
@@ -106,7 +107,7 @@ class SkinEstimationModel {
         }
     }
 
-    fun predictClass(byolArray:FloatArray, py:Python): Int? {
+    private fun predictClass(byolArray:FloatArray, py:Python): Int? {
         var classIndex = 0
         try {
             classIndex = py.getModule("skin_predict").callAttr("predict", byolArray)
