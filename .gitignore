@@ -12,7 +12,6 @@
 /data/class*
 /data/cheek
 /data/unique_face
-/cordova/node_modules
 /.idea
 /App/ncnn-android-yolox/.idea
 /App/ncnn-android-yolox/.gradle
