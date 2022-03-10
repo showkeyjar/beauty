@@ -1,8 +1,6 @@
 import cv2
-import dlib
 import math
 import numpy as np
-from os.path import dirname, join
 """
 使用mlkit获取不同位置
 部位评分 无需使用dlib, google ml-kit face-detection模型也支持人脸关键点及轮廓点的提取
@@ -16,7 +14,7 @@ https://stackoverflow.com/questions/14161331/creating-your-own-contour-in-opencv
 
 todo contours 以顺时针顺序连接, 注意检查
 """
-dlib_face_part = {
+mlkit_face_part = {
     "center":
     {
         "left_eyebrow": [17, 18, 19, 20, 21],

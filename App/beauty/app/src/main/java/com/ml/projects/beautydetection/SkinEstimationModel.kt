@@ -3,8 +3,10 @@ package com.ml.projects.beautydetection
 // import android.util.Log
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
+import android.graphics.Point
 import android.util.Base64
 import android.util.Log
+import androidx.core.graphics.toPoint
 import com.chaquo.python.Python
 import com.google.mlkit.vision.common.InputImage
 import com.google.mlkit.vision.face.FaceContour
@@ -58,37 +60,19 @@ class SkinEstimationModel {
     private fun cutImage(inputFace: Bitmap, py:Python){
         val image = InputImage.fromBitmap(inputFace, 0)
         val detector = FaceDetection.getClient(highAccuracyOpts)
+        var points:ArrayList<Point> = ArrayList<Point>()
         val result = detector.process(image)
             .addOnSuccessListener { faces ->
                 // Task completed successfully
                 for (face in faces) {
-                    val bounds = face.boundingBox
-                    val rotY = face.headEulerAngleY // Head is rotated to the right rotY degrees
-                    val rotZ = face.headEulerAngleZ // Head is tilted sideways rotZ degrees
-
                     // If landmark detection was enabled (mouth, ears, eyes, cheeks, and
                     // nose available):
+                    Log.i("check landmark", "start check land marks")
                     val leftEar = face.getLandmark(FaceLandmark.LEFT_EAR)
                     leftEar?.let {
                         val leftEarPos = leftEar.position
-                    }
-
-                    // If contour detection was enabled:
-                    val leftEyeContour = face.getContour(FaceContour.LEFT_EYE)?.points
-                    Log.i("face contour", leftEyeContour.toString())
-                    val upperLipBottomContour = face.getContour(FaceContour.UPPER_LIP_BOTTOM)?.points
-
-                    // If classification was enabled:
-                    if (face.smilingProbability != null) {
-                        val smileProb = face.smilingProbability
-                    }
-                    if (face.rightEyeOpenProbability != null) {
-                        val rightEyeOpenProb = face.rightEyeOpenProbability
-                    }
-
-                    // If face tracking was enabled:
-                    if (face.trackingId != null) {
-                        val id = face.trackingId
+                        Log.i("check landmark", leftEarPos.toString())
+                        points.add(leftEarPos.toPoint())
                     }
                 }
             }
@@ -99,7 +83,7 @@ class SkinEstimationModel {
 
         var encodingStr = bitmapToString(inputFace)
         try {
-            val bytes = py.getModule("skin_predict").callAttr("cut_cheek", encodingStr)
+            val bytes = py.getModule("skin_predict").callAttr("cut_cheek", encodingStr, points)
                 .toJava(ByteArray::class.java)
             cheekBitMap = BitmapFactory.decodeByteArray(bytes, 0, bytes.size)
         }catch (e: Exception) {
