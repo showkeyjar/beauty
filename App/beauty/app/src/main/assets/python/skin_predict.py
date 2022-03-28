@@ -1,8 +1,8 @@
-import io
+# import io
 import cv2
 import base64
 import numpy as np
-from PIL import Image
+# from PIL import Image
 from joblib import load
 from os.path import dirname, join
 from part_mlkit import get_face_parts
@@ -32,10 +32,12 @@ def cut_cheek(str_data, points):
     if cheek is not None:
         cheek = cv2.resize(cheek, (80, 96), interpolation=cv2.INTER_LINEAR)
         # cheek = cheek.astype(np.float32)
-        pil_img = Image.fromarray(cheek)
-        buff = io.BytesIO()
-        pil_img.save(buff, format="PNG")
-        return buff.getvalue()
+        # pil_img = Image.fromarray(cheek)
+        # buff = io.BytesIO()
+        # pil_img.save(buff, format="PNG")
+        # return buff.getvalue()
+        img_str = cv2.imencode('.jpg', cheek)[1].tostring()
+        return img_str
     return None
 
 
